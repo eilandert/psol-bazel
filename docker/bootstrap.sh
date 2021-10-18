@@ -106,7 +106,6 @@ cd /usr/src/master/pagespeed/automatic
 DIR=$(bazel info output_base)
 cd /usr/src/master
 
-
 rsync -arz "." "psol/include/" --prune-empty-dirs \
   --exclude=".svn" \
   --exclude=".git" \
@@ -131,24 +130,24 @@ rsync -arz "." "psol/include/" --prune-empty-dirs \
   --include="mod_pagespeed_console_html_out.cc" \
   --exclude='*'
 
-rsync -arz "${DIR}/external" "psol/include/" --prune-empty-dirs \
-  --exclude=".svn" \
-  --exclude=".git" \
-  --include='*.h' \
-  --include='*/' \
-  --include="apr_thread_compatible_pool.cc" \
-  --include="serf_url_async_fetcher.cc" \
-  --include="apr_mem_cache.cc" \
-  --include="key_value_codec.cc" \
-  --include="apr_memcache2.c" \
-  --include="loopback_route_fetcher.cc" \
-  --include="add_headers_fetcher.cc" \
-  --include="console_css_out.cc" \
-  --include="console_out.cc" \
-  --include="mod_pagespeed_console_out.cc" \
-  --include="mod_pagespeed_console_css_out.cc" \
-  --include="mod_pagespeed_console_html_out.cc" \
-  --exclude='*'
+#rsync -arz "${DIR}/external" "psol/include/" --prune-empty-dirs \
+#  --exclude=".svn" \
+#  --exclude=".git" \
+#  --include='*.h' \
+#  --include='*/' \
+#  --include="apr_thread_compatible_pool.cc" \
+#  --include="serf_url_async_fetcher.cc" \
+#  --include="apr_mem_cache.cc" \
+#  --include="key_value_codec.cc" \
+#  --include="apr_memcache2.c" \
+#  --include="loopback_route_fetcher.cc" \
+#  --include="add_headers_fetcher.cc" \
+#  --include="console_css_out.cc" \
+#  --include="console_out.cc" \
+#  --include="mod_pagespeed_console_out.cc" \
+#  --include="mod_pagespeed_console_css_out.cc" \
+#  --include="mod_pagespeed_console_html_out.cc" \
+#  --exclude='*'
 
 rsync -arz "${DIR}/external/google_sparsehash/src/google" "psol/include" --prune-empty-dirs \
   --exclude=".svn" \
@@ -157,16 +156,16 @@ rsync -arz "${DIR}/external/google_sparsehash/src/google" "psol/include" --prune
   --include="dense_hash_set" \
   --include="sparse_hash_map" \
   --include="sparse_hash_set" \
-  --include="sparsetable"
+  --include="sparsetable" \
   --exclude='*'
 
-rsync -arz "$DIR/external/glog/src/windows/glog" "psol/include" --prune-empty-dirs \
-  --exclude=".svn" \
-  --exclude=".git" \
-  --include='*.h' \
-  --include='*.inc' \
-  --include='*/' \
-  --exclude='*'
+#rsync -arz "$DIR/external/glog/src/windows/glog" "psol/include" --prune-empty-dirs \
+ # --exclude=".svn" \
+ # --exclude=".git" \
+ # --include='*.h' \
+ # --include='*.inc' \
+ # --include='*/' \
+ # --exclude='*'
 
 rsync -arz "${DIR}/execroot/mod_pagespeed/external/com_google_absl/absl" "psol/include" --prune-empty-dirs \
   --exclude=".svn" \
