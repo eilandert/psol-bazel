@@ -147,13 +147,29 @@ rsync -arz ${DIR}/execroot/mod_pagespeed/external/com_google_absl/absl /usr/src/
   --exclude=".svn" \
   --exclude=".git" \
   --include='*.h' \
+  --include='*.inc' \
   --include='*/' \
   --exclude='*'
 
 cd /usr/src/master
 tar czf /usr/src/psol-bazel-${DIST}.tar.gz psol
 
+cd /usr/src
+rm -rf nginx*
+pip install lastversion
+LASTVERSION=$(lastversion nginx)
+lastversion download nginx
+tar zxvf nginx-*.tar.gz
+cd nginx-${LASTVERSION}/src
+git clone https://github.com/apache/incubator-pagespeed-ngx
+cd incubator-pagespeed-ngx/
+tar zxvf /usr/src/psol-bazel-${DIST}.tar.gz
+cd /usr/src/nginx-${LASTVERSION}
+./configure --add-dynamic-module=src/incubator-pagespeed-ngx/
+cat /usr/src/nginx-${LASTVERSION}/objs/autoconf.err
+
 echo "sleeping for 3h to allow you to docker exec -it into this docker and try some things"
+echo "see /usr/src/nginx-${LASTVERSION}/objs/autoconf.err for configure errors"
 sleep 3h
 
 exit 0;
