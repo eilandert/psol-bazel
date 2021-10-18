@@ -130,11 +130,11 @@ rsync -arz "." "psol/include/" --prune-empty-dirs \
 cd /usr/src/master/pagespeed/automatic
 DIR=$(bazel info output_base)
 cd /usr/src/master
-rsync -arz ${DIR}/execroot/mod_pagespeed/external/com_google_absl/absl /usr/src/master/psol/includes
+rsync -arz ${DIR}/execroot/mod_pagespeed/external/com_google_absl/absl /usr/src/master/psol/include
   --exclude=".svn" \
   --exclude=".git" \
   --include='*.h' \
-  --include='*/' 
+  --include='*/' \
   --exclude='*'
 
 cd /usr/src/master
