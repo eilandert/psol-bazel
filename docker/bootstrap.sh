@@ -80,13 +80,12 @@ bazel build -c opt //pagespeed/automatic:automatic --verbose_failures --sandbox_
 
 cd /usr/src/master/pagespeed/automatic
 
-#ADIR="/usr/src/master/bazel-bin"
 ADIR=$(bazel info output_base)
-ALIST=$(find -L $ADIR -name "*.a" | grep -v main | grep -v copy | sed -e s/"^\."/"\/root"/g | xargs echo)
+ALIST=$(find -L $ADIR/execroot -name "*.a" | grep -v main | grep -v copy |grep -v go_sdk|grep -v envoy| sed -e s/"^\."/"\/root"/g | xargs echo)
 
 echo "merging libs"
-./merge_libraries.sh ~/pagespeed_automatic.a.dirty $ALIST > merge.log
-./rename_c_symbols.sh ~/pagespeed_automatic.a.dirty ~/pagespeed_automatic.a > symbol-rename.log
+./merge_libraries.sh ~/pagespeed_automatic.a.dirty $ALIST
+./rename_c_symbols.sh ~/pagespeed_automatic.a.dirty ~/pagespeed_automatic.a
 
 cd /usr/src/master
 rm -rf psol
