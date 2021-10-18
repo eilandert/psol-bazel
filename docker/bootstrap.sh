@@ -144,7 +144,7 @@ cd /usr/src/master
 #compilation terminated.
 #----------
 
-rsync -arz ${DIR}/execroot/mod_pagespeed/external/com_google_absl/absl /usr/src/master/psol/include
+rsync -arz ${DIR}/execroot/mod_pagespeed/external/com_google_absl/absl /usr/src/master/psol/include \
   --exclude=".svn" \
   --exclude=".git" \
   --include='*.h' \
