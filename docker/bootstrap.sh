@@ -130,6 +130,20 @@ rsync -arz "." "psol/include/" --prune-empty-dirs \
 cd /usr/src/master/pagespeed/automatic
 DIR=$(bazel info output_base)
 cd /usr/src/master
+
+#
+# Trying to fix:
+#
+#----------------------------------------
+#checking for psol
+#
+#In file included from /build/nginx-1.21.3/debian/modules/ngx_pagespeed/psol/include/pagespeed/kernel/base/string_writer.h:25,
+#                 from objs/autotest.cc:6:
+#/build/nginx-1.21.3/debian/modules/ngx_pagespeed/psol/include/pagespeed/kernel/base/string_util.h:32:10: fatal error: absl/strings/internal/memutil.h: No such file or directory/internal/memutil.h"  // StripAsciiWhitespace
+#      |          ^~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
+#compilation terminated.
+#----------
+
 rsync -arz ${DIR}/execroot/mod_pagespeed/external/com_google_absl/absl /usr/src/master/psol/include
   --exclude=".svn" \
   --exclude=".git" \
