@@ -5,14 +5,14 @@ WORKDIR=$(pwd)
 mkdir -p src
 cd src
 
-if [ ! -d "master" ]; then
-    echo "cloning.."
-    git clone -b latest-stable --depth=1 -c advice.detachedHead=false --recursive https://github.com/apache/incubator-pagespeed-mod.git
-else
-    echo "pulling.."
-    cd incubator-pagespeed-mod
-    git pull --recurse-submodules
-fi
+#if [ ! -d "master" ]; then
+#    echo "cloning.."
+#    git clone -b latest-stable --depth=1 -c advice.detachedHead=false --recursive https://github.com/apache/incubator-pagespeed-mod.git
+#else
+#    echo "pulling.."
+#    cd incubator-pagespeed-mod
+#    git pull --recurse-submodules
+#fi
 
 if [ ! -d "master" ]; then
     echo "cloning.."
@@ -23,7 +23,7 @@ else
     git pull --recurse-submodules
 fi
 
-cd ${WORKDIR}/src
+cd ${WORKDIR}/src/master
 
 #echo "copying third_party for now"
 #cp -rp incubator-pagespeed-mod/third_party master

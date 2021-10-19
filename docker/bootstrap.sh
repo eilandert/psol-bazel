@@ -4,6 +4,15 @@ set -x
 
 dpkg-statoverride --remove /usr/bin/sudo
 
+apt-get update
+apt-get -y install \
+   eatmydata ccache
+
+apt-get -y install --no-install-recommends eatmydata ccache
+export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so"
+export PATH=/usr/lib/ccache:${PATH}
+
+
 echo "deb [trusted=yes] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
 apt-get update
 apt-get -y install \
