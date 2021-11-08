@@ -4,14 +4,11 @@ set -x
 
 dpkg-statoverride --remove /usr/bin/sudo
 
-apt-get update
-apt-get -y install \
-   eatmydata ccache
-
-apt-get -y install --no-install-recommends eatmydata ccache
-export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so"
-export PATH=/usr/lib/ccache:${PATH}
-
+#apt-get update
+#apt-get -y install --no-install-recommends eatmydata
+#export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so"
+#export PATH=/usr/lib/ccache:${PATH}
+#CCACHE_DIR=/var/cache/ccache
 
 echo "deb [trusted=yes] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
 apt-get update
@@ -62,19 +59,15 @@ apt-get -y install \
    openjdk-11-jdk \
    pkg-config zip g++ zlib1g-dev unzip python3 ninja-build cmake gperf memcached apache2-dev python2 clang-10 memcached redis-server
 
-sudo service memcached start
-sudo service redis-server start
-
-sudo apt-get update && sudo apt-get -y full-upgrade
-sudo ln -s /usr/bin/bazel-4.1.0 /usr/bin/bazel
 
 cd /usr/src/master
 sudo install/install_required_packages.sh --additional_dev_packages
 
-rm /usr/bin/python
-ln -s /usr/bin/python2 /usr/bin/python
+sudo apt-get update && sudo apt-get -y full-upgrade
+sudo ln -s /usr/bin/bazel-4.1.0 /usr/bin/bazel
 
-apt-get -y -t ${DIST}-backports upgrade
+rm -f /usr/bin/python
+ln -s /usr/bin/python2 /usr/bin/python
 
 NUMCORE=$(cat /proc/cpuinfo | grep -c cores)
 export NUMCORE
@@ -83,138 +76,24 @@ echo "NUMBER OF CORES: ${NUMCORE}"
 cd /usr/src/master
 #sed -i -r 's/sys_siglist\[signum\]/strsignal(signum)/g' third_party/apr/src/threadproc/unix/signals.c
 
-#bazel clean
-#bazel fetch //pagespeed/automatic:automatic
-bazel build -c opt //pagespeed/automatic:automatic --verbose_failures --sandbox_debug
+bazel clean --expunge
+bazel fetch //pagespeed/automatic:automatic
+bazel build -c fastbuild \
+  @glog//:glog @com_google_absl//absl/base @com_google_absl//absl/strings @com_google_absl//absl/hash @com_google_absl//absl/memory  \
+  @com_github_gflags_gflags//:gflags @com_googlesource_googleurl//base \
+  //pagespeed/kernel/... //pagespeed/automatic/... //pagespeed/system/... //pagespeed/controller/... \
+  //pagespeed/opt/... //base/... //net/instaweb/... //third_party/... \
+  mod_pagespeed
 
-cd /usr/src/master/pagespeed/automatic
+/build.sh
 
-ADIR=$(bazel info output_base)
-ALIST=$(find -L $ADIR/execroot -name "*.a" | grep -v main | grep -v copy |grep -v go_sdk|grep -v envoy| sed -e s/"^\."/"\/root"/g | xargs echo)
-
-echo "merging libs"
-./merge_libraries.sh ~/pagespeed_automatic.a.dirty $ALIST
-./rename_c_symbols.sh ~/pagespeed_automatic.a.dirty ~/pagespeed_automatic.a
-
-cd /usr/src/master
-rm -rf psol
-mkdir -p psol/include
-
-if [ "$(uname -m)" = x86_64 ]; then
-  bit_size_name=x64
-else
-  bit_size_name=ia32
-fi
-
-bindir="psol/lib/Release/linux/$bit_size_name"
-mkdir -p "$bindir"
-echo Copying files to psol directory...
-cp -f ~/pagespeed_automatic.a $bindir/
-
-cd /usr/src/master/pagespeed/automatic
-DIR=$(bazel info output_base)
-cd /usr/src/master
-
-rsync -arz "." "psol/include/" --prune-empty-dirs \
-  --exclude=".svn" \
-  --exclude=".git" \
-  --include='*.h' \
-  --include='*/' \
-  --include="apr_thread_compatible_pool.cc" \
-  --include="serf_url_async_fetcher.cc" \
-  --include="apr_mem_cache.cc" \
-  --include="key_value_codec.cc" \
-  --include="apr_memcache2.c" \
-  --include="loopback_route_fetcher.cc" \
-  --include="add_headers_fetcher.cc" \
-  --include="console_css_out.cc" \
-  --include="console_out.cc" \
-  --include="dense_hash_map" \
-  --include="dense_hash_set" \
-  --include="sparse_hash_map" \
-  --include="sparse_hash_set" \
-  --include="sparsetable" \
-  --include="mod_pagespeed_console_out.cc" \
-  --include="mod_pagespeed_console_css_out.cc" \
-  --include="mod_pagespeed_console_html_out.cc" \
-  --exclude='*'
-
-#rsync -arz "${DIR}/external" "psol/include/" --prune-empty-dirs \
-#  --exclude=".svn" \
-#  --exclude=".git" \
-#  --include='*.h' \
-#  --include='*/' \
-#  --include="apr_thread_compatible_pool.cc" \
-#  --include="serf_url_async_fetcher.cc" \
-#  --include="apr_mem_cache.cc" \
-#  --include="key_value_codec.cc" \
-#  --include="apr_memcache2.c" \
-#  --include="loopback_route_fetcher.cc" \
-#  --include="add_headers_fetcher.cc" \
-#  --include="console_css_out.cc" \
-#  --include="console_out.cc" \
-#  --include="mod_pagespeed_console_out.cc" \
-#  --include="mod_pagespeed_console_css_out.cc" \
-#  --include="mod_pagespeed_console_html_out.cc" \
-#  --exclude='*'
-
-rsync -arz "${DIR}/external/google_sparsehash/src/google" "psol/include" --prune-empty-dirs \
-  --exclude=".svn" \
-  --exclude=".git" \
-  --include="dense_hash_map" \
-  --include="dense_hash_set" \
-  --include="sparse_hash_map" \
-  --include="sparse_hash_set" \
-  --include="sparsetable" \
-  --exclude='*'
-
-#rsync -arz "$DIR/external/glog/src/windows/glog" "psol/include" --prune-empty-dirs \
- # --exclude=".svn" \
- # --exclude=".git" \
- # --include='*.h' \
- # --include='*.inc' \
- # --include='*/' \
- # --exclude='*'
-
-rsync -arz "${DIR}/execroot/mod_pagespeed/external/com_google_absl/absl" "psol/include" --prune-empty-dirs \
-  --exclude=".svn" \
-  --exclude=".git" \
-  --include='*.h' \
-  --include='*.inc' \
-  --include='*/' \
-  --exclude='*'
-
-#sed -i /"#include \"glog\/logging.h\""/d    psol/include/base/logging.h
-
-#rsync -larz ${DIR}/external/glog /usr/src/master/psol/include \
-#  --exclude=".svn" \
-#  --exclude=".git" \
-#  --include='*.h' \
-#  --include='*.inc' \
-#  --include='*/' \
-#  --exclude='*'
-
-
-cd /usr/src/master
-tar czf /usr/src/psol-bazel-${DIST}.tar.gz psol
-
-cd /usr/src
-rm -rf nginx*
-pip install lastversion
-LASTVERSION=$(lastversion nginx)
-lastversion download nginx
-tar zxvf nginx-*.tar.gz
-cd nginx-${LASTVERSION}/src
-git clone https://github.com/apache/incubator-pagespeed-ngx
-cd incubator-pagespeed-ngx/
-tar zxvf /usr/src/psol-bazel-${DIST}.tar.gz
-cd /usr/src/nginx-${LASTVERSION}
-./configure --add-dynamic-module=src/incubator-pagespeed-ngx/
 cat /usr/src/nginx-${LASTVERSION}/objs/autoconf.err
 
-echo "sleeping for 3h to allow you to docker exec -it into this docker and try some things"
+dockerid=$(hostname)
+echo "sleeping for 1d to allow you to use docker exec -it $dockerid bash into this docker and try some things"
 echo "see /usr/src/nginx-${LASTVERSION}/objs/autoconf.err for configure errors"
-sleep 3h
+sleep 1d
+
 
 exit 0;
 
