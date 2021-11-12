@@ -78,12 +78,6 @@ cd /usr/src/master
 
 bazel clean --expunge
 bazel fetch //pagespeed/automatic:automatic
-bazel build -c fastbuild \
-  @glog//:glog @com_google_absl//absl/base @com_google_absl//absl/strings @com_google_absl//absl/hash @com_google_absl//absl/memory  \
-  @com_github_gflags_gflags//:gflags @com_googlesource_googleurl//base \
-  //pagespeed/kernel/... //pagespeed/automatic/... //pagespeed/system/... //pagespeed/controller/... \
-  //pagespeed/opt/... //base/... //net/instaweb/... //third_party/... \
-  mod_pagespeed
 
 /build.sh
 
