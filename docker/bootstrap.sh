@@ -80,6 +80,7 @@ bazel fetch //pagespeed/automatic:automatic
 /build.sh
 
 dockerid=$(hostname)
+echo "---"
 echo "sleeping for 1d to allow you to use docker exec -it $dockerid bash into this docker and try some things"
 sleep 1d
 
