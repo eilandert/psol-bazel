@@ -47,6 +47,17 @@ apt-get -y install \
     openjdk-11-jdk \
     pkg-config zip g++ zlib1g-dev unzip python3 ninja-build cmake gperf memcached apache2-dev python2 clang-10 memcached redis-server
 
+cd /usr/src
+if [ ! -d "master" ]; then
+    echo "cloning.."
+    git clone --depth=10 -c advice.detachedHead=false --recursive https://github.com/apache/incubator-pagespeed-mod.git master
+    sed -i s/"#include <string>"/"#include <string>\n#include <cstdarg>"/ pagespeed/kernel/base/string.h
+else
+    echo "pulling.."
+    cd master
+    git pull --recurse-submodules
+fi
+
 cd /usr/src/master
 sudo install/install_required_packages.sh --additional_dev_packages
 
