@@ -20,9 +20,6 @@ cd /usr/src/master/pagespeed/automatic
 ADIR=$(bazel info bazel-bin)
 ALIST=$(find -L $ADIR | grep \.a$ | grep -v main | grep -v copy | grep -v envoy | grep -v testdata |grep -v _race | grep -v librewriter.a|  xargs echo)
 
-#ALIST2="/lib/x86_64-linux-gnu/libicudata.a /lib/x86_64-linux-gnu/libicuuc.a"
-#ALIST="${ALIST1} ${ALIST2}"
-
 echo "merging libs"
 ./merge_libraries.sh ~/pagespeed_automatic.a.dirty $ALIST
 ./rename_c_symbols.sh ~/pagespeed_automatic.a.dirty ~/pagespeed_automatic.a
@@ -146,12 +143,12 @@ cd nginx-${LASTVERSION}
 mkdir modules
 cd modules
 git clone https://github.com/eilandert/pagespeed-ngx-bazel.git
-cd incubator-pagespeed-ngx/
+cd pagespeed-ngx-bazel
 tar zxvf /usr/src/psol-bazel-${DIST}.tar.gz
 cd /usr/src/nginx-${LASTVERSION}
 ./configure \
         --with-cc-opt='-Wformat -Werror=format-security -DNGX_HTTP_HEADERS -fPIC -Wdate-time -D_FORTIFY_SOURCE=2' --with-ld-opt='-Wl,-z,relro -Wl,-z,now -fPIC -static-libstdc++' --prefix=/usr/share/nginx --conf-path=/etc/nginx/nginx.conf --http-log-path=/var/log/nginx/access.log --error-log-path=/var/log/nginx/error.log --lock-path=/var/lock/nginx.lock --pid-path=/run/nginx.pid --modules-path=/usr/lib/nginx/modules --http-client-body-temp-path=/var/lib/nginx/body --http-fastcgi-temp-path=/var/lib/nginx/fastcgi --http-proxy-temp-path=/var/lib/nginx/proxy --http-scgi-temp-path=/var/lib/nginx/scgi --http-uwsgi-temp-path=/var/lib/nginx/uwsgi --with-compat --with-pcre-jit --with-threads \
-        --add-dynamic-module=modules/incubator-pagespeed-ngx
+        --add-dynamic-module=modules/pagespeed-ngx-bazel
 make
 exit 0;
 
