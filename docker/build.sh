@@ -7,10 +7,10 @@ cd /usr/src/master
 
 bazel build -c fastbuild \
   @glog//:glog \
+  @com_google_absl//... \
   @com_github_gflags_gflags//... \
   @com_googlesource_googleurl//... \
   @google_sparsehash//... \
-  @com_google_absl//... \
   //pagespeed/kernel/... //pagespeed/automatic/... //pagespeed/system/... //pagespeed/controller/... \
   //pagespeed/opt/... //base/... //net/instaweb/... //third_party/... \
   mod_pagespeed
@@ -18,7 +18,7 @@ bazel build -c fastbuild \
 cd /usr/src/master/pagespeed/automatic
 
 ADIR=$(bazel info bazel-bin)
-ALIST=$(find -L $ADIR | grep \.a$ | grep -v main | grep -v copy | grep -v envoy | grep -v testdata |grep -v _race | grep -v librewriter.a |  xargs echo)
+ALIST=$(find -L $ADIR | grep \.a$ | grep -v main | grep -v copy | grep -v envoy | grep -v testdata |grep -v _race | grep -v librewriter.a|  xargs echo)
 
 #ALIST2="/lib/x86_64-linux-gnu/libicudata.a /lib/x86_64-linux-gnu/libicuuc.a"
 #ALIST="${ALIST1} ${ALIST2}"
@@ -139,21 +139,19 @@ tar czf /usr/src/psol-bazel-${DIST}.tar.gz psol
 cd /usr/src
 rm -rf nginx*
 pip install lastversion
-LASTVERSION=$(lastversion nginx)
+export LASTVERSION=$(lastversion nginx)
 lastversion download nginx
 tar zxvf nginx-*.tar.gz
 cd nginx-${LASTVERSION}
 mkdir modules
 cd modules
-git clone https://github.com/apache/incubator-pagespeed-ngx
+git clone https://github.com/eilandert/pagespeed-ngx-bazel.git
 cd incubator-pagespeed-ngx/
 tar zxvf /usr/src/psol-bazel-${DIST}.tar.gz
 cd /usr/src/nginx-${LASTVERSION}
 ./configure \
-        --with-cc-opt='-Wformat -Werror=format-security -DNGX_HTTP_HEADERS -fPIC -Wdate-time -D_FORTIFY_SOURCE=2' --with-ld-opt='-Wl,-z,relro -Wl,-z,now -fPIC -static-libstdc++ -Wl' --build=https://deb.paranoid.nl/nginx-modules/ \
+        --with-cc-opt='-Wformat -Werror=format-security -DNGX_HTTP_HEADERS -fPIC -Wdate-time -D_FORTIFY_SOURCE=2' --with-ld-opt='-Wl,-z,relro -Wl,-z,now -fPIC -static-libstdc++' --prefix=/usr/share/nginx --conf-path=/etc/nginx/nginx.conf --http-log-path=/var/log/nginx/access.log --error-log-path=/var/log/nginx/error.log --lock-path=/var/lock/nginx.lock --pid-path=/run/nginx.pid --modules-path=/usr/lib/nginx/modules --http-client-body-temp-path=/var/lib/nginx/body --http-fastcgi-temp-path=/var/lib/nginx/fastcgi --http-proxy-temp-path=/var/lib/nginx/proxy --http-scgi-temp-path=/var/lib/nginx/scgi --http-uwsgi-temp-path=/var/lib/nginx/uwsgi --with-compat --with-pcre-jit --with-threads \
         --add-dynamic-module=modules/incubator-pagespeed-ngx
-
 make
-
 exit 0;
 

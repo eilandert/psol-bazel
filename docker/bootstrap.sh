@@ -4,16 +4,11 @@ set -x
 
 dpkg-statoverride --remove /usr/bin/sudo
 
-#apt-get update
-#apt-get -y install --no-install-recommends eatmydata
-#export LD_PRELOAD="${LD_PRELOAD:+$LD_PRELOAD:}libeatmydata.so"
-#export PATH=/usr/lib/ccache:${PATH}
-#CCACHE_DIR=/var/cache/ccache
-
 echo "deb [trusted=yes] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
 apt-get update
 apt-get -y install \
    nano \
+   curl \
    gnupg \
    sudo \
    apt-transport-https \
@@ -59,7 +54,6 @@ apt-get -y install \
    openjdk-11-jdk \
    pkg-config zip g++ zlib1g-dev unzip python3 ninja-build cmake gperf memcached apache2-dev python2 clang-10 memcached redis-server
 
-
 cd /usr/src/master
 sudo install/install_required_packages.sh --additional_dev_packages
 
@@ -80,6 +74,8 @@ bazel clean --expunge
 bazel fetch //pagespeed/automatic:automatic
 
 /build.sh
+
+cat /usr/src/nginx-${LASTVERSION}/objs/autoconf.err
 
 dockerid=$(hostname)
 echo "sleeping for 1d to allow you to use docker exec -it $dockerid bash into this docker and try some things"
