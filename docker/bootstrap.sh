@@ -13,7 +13,7 @@ dpkg-statoverride --remove /usr/bin/sudo
 echo "deb [trusted=yes] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
 apt-get update
 apt-get -y install \
-   curl \
+   nano \
    gnupg \
    sudo \
    apt-transport-https \
@@ -80,8 +80,6 @@ bazel clean --expunge
 bazel fetch //pagespeed/automatic:automatic
 
 /build.sh
-
-cat /usr/src/nginx-${LASTVERSION}/objs/autoconf.err
 
 dockerid=$(hostname)
 echo "sleeping for 1d to allow you to use docker exec -it $dockerid bash into this docker and try some things"
