@@ -1,58 +1,51 @@
 #!/bin/bash
 
-set -x
-
 dpkg-statoverride --remove /usr/bin/sudo
-
 echo "deb [trusted=yes] https://storage.googleapis.com/bazel-apt stable jdk1.8" | tee /etc/apt/sources.list.d/bazel.list
 apt-get update
 apt-get -y install \
-   nano \
-   curl \
-   gnupg \
-   sudo \
-   apt-transport-https \
-   curl \
-   gnupg \
-   apt \
-   git \
-   lsb-release \
-   libpcre3-dev \
-   build-essential \
-   unzip \
-   uuid-dev \
-   webp \
-   g++ \
-   libssl-dev \
-   wget \
-   curl \
-   sudo \
-   rsync \
-   gperf \
-   zip \
-   cmake \
-   ninja-build \
-   zlib1g-dev  \
-   icu-devtools \
-   libicu-dev \
-   autoconf \
-   automake \
-   cmake \
-   curl \
-   libtool \
-   make \
-   ninja-build \
-   patch \
-   python3-pip \
-   unzip \
-   virtualenv \
-   llvm \
-   clang \
-   bazel \
-   bazel-4.1.0 \
-   python2-minimal \
-   openjdk-11-jdk \
-   pkg-config zip g++ zlib1g-dev unzip python3 ninja-build cmake gperf memcached apache2-dev python2 clang-10 memcached redis-server
+    nano \
+    sudo \
+    curl \
+    gnupg \
+    sudo \
+    apt-transport-https \
+    apt \
+    git \
+    lsb-release \
+    libpcre3-dev \
+    build-essential \
+    unzip \
+    uuid-dev \
+    webp \
+    g++ \
+    libssl-dev \
+    wget \
+    rsync \
+    gperf \
+    zip \
+    cmake \
+    ninja-build \
+    zlib1g-dev  \
+    icu-devtools \
+    libicu-dev \
+    autoconf \
+    automake \
+    cmake \
+    libtool \
+    make \
+    ninja-build \
+    patch \
+    python3-pip \
+    unzip \
+    virtualenv \
+    llvm \
+    clang \
+    bazel \
+    bazel-4.1.0 \
+    python2-minimal \
+    openjdk-11-jdk \
+    pkg-config zip g++ zlib1g-dev unzip python3 ninja-build cmake gperf memcached apache2-dev python2 clang-10 memcached redis-server
 
 cd /usr/src/master
 sudo install/install_required_packages.sh --additional_dev_packages
@@ -75,13 +68,9 @@ bazel fetch //pagespeed/automatic:automatic
 
 /build.sh
 
-cat /usr/src/nginx-${LASTVERSION}/objs/autoconf.err
-
 dockerid=$(hostname)
 echo "sleeping for 1d to allow you to use docker exec -it $dockerid bash into this docker and try some things"
-echo "see /usr/src/nginx-${LASTVERSION}/objs/autoconf.err for configure errors"
 sleep 1d
-
 
 exit 0;
 
