@@ -32,7 +32,7 @@ rm -rf /usr/src/psol-bazel-${DIST}.tar.gz
 
 cd /usr/src/master/pagespeed/automatic
 ADIR=$(bazel info bazel-bin)
-ALIST=$(find -L $ADIR | grep \.a$ | grep -v main | grep -v copy | grep -v envoy | grep -v testdata |grep -v _race | grep -v _dbg | grep -v librewriter.a|  xargs echo)
+ALIST=$(find -L $ADIR | grep \.a$ | grep -v main | grep -v copy | grep -v testdata |grep -v _race | grep -v _dbg | grep -v librewriter.a|  xargs echo)
 
 echo "merging libs"
 ./merge_libraries.sh ~/pagespeed_automatic.a.dirty $ALIST
@@ -57,6 +57,39 @@ cp -f ~/pagespeed_automatic.a $bindir/
 cd /usr/src/master/pagespeed/automatic
 DIR=$(bazel info output_base)
 cd /usr/src/master
+
+#ENVOY
+rsync -Larz "${DIR}/external/envoy" "psol/include" \
+    --prune-empty-dirs \
+    --exclude=".svn" \
+    --exclude=".git" \
+    --include='*.h' \
+    --include='*.inc' \
+    --include='*/' \
+    --exclude='*'
+
+#do we really need this?
+cp ${DIR}/external/envoy/source/common/common/standard/* psol/include/envoy/source/common/common
+
+#do we really need this?
+rsync -Larz "${DIR}/external/com_github_gabime_spdlog/include/spdlog" "psol/include" \
+    --prune-empty-dirs \
+    --exclude=".svn" \
+    --exclude=".git" \
+    --include='*.h' \
+    --include='*.inc' \
+    --include='*/' \
+    --exclude='*'
+
+#do we really need this?
+rsync -Larz "${DIR}/external/com_github_fmtlib_fmt/include/fmt" "psol/include" \
+    --prune-empty-dirs \
+    --exclude=".svn" \
+    --exclude=".git" \
+    --include='*.h' \
+    --include='*.inc' \
+    --include='*/' \
+    --exclude='*'
 
 #GLOG
 rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/external/glog/_virtual_includes/default_glog_headers/glog" "psol/include" \
