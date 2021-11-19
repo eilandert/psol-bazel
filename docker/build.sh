@@ -32,6 +32,8 @@ rm -rf /usr/src/psol-bazel-${DIST}.tar.gz
 
 cd /usr/src/master/pagespeed/automatic
 ADIR=$(bazel info bazel-bin)
+
+# Do we need envoy or can we exclude it?
 ALIST=$(find -L $ADIR | grep \.a$ | grep -v main | grep -v copy | grep -v testdata |grep -v _race | grep -v _dbg | grep -v librewriter.a|  xargs echo)
 
 echo "merging libs"
