@@ -74,6 +74,8 @@ echo "NUMBER OF CORES: ${NUMCORE}"
 cd /usr/src/master
 #sed -i -r 's/sys_siglist\[signum\]/strsignal(signum)/g' third_party/apr/src/threadproc/unix/signals.c
 
+rm -rf /usr/src/nginx*
+
 bazel clean --expunge
 bazel fetch //pagespeed/automatic:automatic
 
