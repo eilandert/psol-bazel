@@ -5,6 +5,7 @@ echo "deb [trusted=yes] https://storage.googleapis.com/bazel-apt stable jdk1.8" 
 apt-get update
 apt-get -y install \
     nano \
+    vim \
     sudo \
     curl \
     gnupg \
