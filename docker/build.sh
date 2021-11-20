@@ -61,7 +61,7 @@ DIR=$(bazel info output_base)
 cd /usr/src/master
 
 #ENVOY
-rsync -Larz "${DIR}/external/envoy" "psol/include" \
+rsync -Larz "${DIR}/external/envoy" "psol/include/external" \
     --prune-empty-dirs \
     --exclude=".svn" \
     --exclude=".git" \
@@ -74,7 +74,7 @@ rsync -Larz "${DIR}/external/envoy" "psol/include" \
 cp ${DIR}/external/envoy/source/common/common/standard/* psol/include/envoy/source/common/common
 
 #do we really need this?
-rsync -Larz "${DIR}/external/com_github_gabime_spdlog/include/spdlog" "psol/include" \
+rsync -Larz "${DIR}/external/com_github_gabime_spdlog/include/spdlog" "psol/include/external" \
     --prune-empty-dirs \
     --exclude=".svn" \
     --exclude=".git" \
@@ -84,7 +84,7 @@ rsync -Larz "${DIR}/external/com_github_gabime_spdlog/include/spdlog" "psol/incl
     --exclude='*'
 
 #do we really need this?
-rsync -Larz "${DIR}/external/com_github_fmtlib_fmt/include/fmt" "psol/include" \
+rsync -Larz "${DIR}/external/com_github_fmtlib_fmt/include/fmt" "psol/include/external" \
     --prune-empty-dirs \
     --exclude=".svn" \
     --exclude=".git" \
@@ -94,7 +94,7 @@ rsync -Larz "${DIR}/external/com_github_fmtlib_fmt/include/fmt" "psol/include" \
     --exclude='*'
 
 #GLOG
-rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/external/glog/_virtual_includes/default_glog_headers/glog" "psol/include" \
+rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/external/glog/_virtual_includes/default_glog_headers/glog" "psol/include/external" \
     --prune-empty-dirs \
     --exclude=".svn" \
     --exclude=".git" \
@@ -104,7 +104,7 @@ rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/external/g
     --exclude='*'
 
 #ABSEIL
-rsync -Larz "${DIR}/external/com_google_absl/absl" "psol/include" --prune-empty-dirs \
+rsync -Larz "${DIR}/external/com_google_absl/absl" "psol/include/external" --prune-empty-dirs \
     --exclude=".svn" \
     --exclude=".git" \
     --include='*.h' \
@@ -114,7 +114,7 @@ rsync -Larz "${DIR}/external/com_google_absl/absl" "psol/include" --prune-empty-
 
 #GFLAGS
 rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/external/com_github_gflags_gflags/_virtual_includes/gflags/gflags" \
-    "psol/include" --prune-empty-dirs \
+    "psol/include/external" --prune-empty-dirs \
     --exclude=".svn" \
     --exclude=".git" \
     --include='*.h' \
@@ -123,7 +123,7 @@ rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/external/c
     --exclude='*'
 
 #GURL
-rsync -Larz "${DIR}/external/com_googlesource_googleurl/url" "psol/include/" --prune-empty-dirs \
+rsync -Larz "${DIR}/external/com_googlesource_googleurl/url" "psol/include/external" --prune-empty-dirs \
     --exclude=".svn" \
     --exclude=".git" \
     --include='*.h' \
@@ -133,7 +133,7 @@ rsync -Larz "${DIR}/external/com_googlesource_googleurl/url" "psol/include/" --p
 
 #SPARSE HASH SET
 rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/external/google_sparsehash/_virtual_includes/google_sparsehash/google" \
-    "psol/include/" --prune-empty-dirs \
+    "psol/include/external" --prune-empty-dirs \
     --exclude=".svn" \
     --exclude=".git" \
     --include='*.h' \
