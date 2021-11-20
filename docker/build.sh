@@ -33,7 +33,7 @@ rm -rf /usr/src/psol-bazel-${DIST}.tar.gz
 cd /usr/src/master/pagespeed/automatic
 ADIR=$(bazel info bazel-bin)
 
-# Do we need envoy or can we exclude it?
+# Do we need (envoy|_dbg|librewriter.a) or can we exclude it?
 ALIST=$(find -L $ADIR | grep \.a$ | grep -v main | grep -v copy | grep -v testdata |grep -v _race |  xargs echo)
 
 echo "merging libs"
@@ -125,7 +125,7 @@ rsync -Larz "${DIR}/external/hiredis" "psol/include/external" --prune-empty-dirs
     --include='*/' \
     --exclude='*'
 
-rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/net" "psol/include/external" --prune-empty-dirs \
+rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/net" "psol/include/execroot" --prune-empty-dirs \
     --exclude=".svn" \
     --exclude=".git" \
     --include='*.h' \
@@ -133,7 +133,7 @@ rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/net" "psol
     --include='*/' \
     --exclude='*'
 
-rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/pagespeed" "psol/include/external" --prune-empty-dirs \
+rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/pagespeed" "psol/include/execroot" --prune-empty-dirs \
     --exclude=".svn" \
     --exclude=".git" \
     --include='*.h' \
@@ -166,7 +166,7 @@ rsync -Larz "${DIR}/external/com_github_grpc_grpc/include/grpc++" "psol/include/
     --exclude='*'
 
 #GLOG
-rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/external/glog/_virtual_includes/default_glog_headers/glog" "psol/include/external" \
+rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/external/glog/_virtual_includes/default_glog_headers/glog" "psol/include/execroot" \
     --prune-empty-dirs \
     --exclude=".svn" \
     --exclude=".git" \
@@ -186,7 +186,7 @@ rsync -Larz "${DIR}/external/com_google_absl/absl" "psol/include/external" --pru
 
 #GFLAGS
 rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/external/com_github_gflags_gflags/_virtual_includes/gflags/gflags" \
-    "psol/include/external" --prune-empty-dirs \
+    "psol/include/execroot" --prune-empty-dirs \
     --exclude=".svn" \
     --exclude=".git" \
     --include='*.h' \
@@ -205,7 +205,7 @@ rsync -Larz "${DIR}/external/com_googlesource_googleurl/url" "psol/include/exter
 
 #SPARSE HASH SET
 rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/external/google_sparsehash/_virtual_includes/google_sparsehash/google" \
-    "psol/include/external" --prune-empty-dirs \
+    "psol/include/execroot" --prune-empty-dirs \
     --exclude=".svn" \
     --exclude=".git" \
     --include='*.h' \
