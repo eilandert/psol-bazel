@@ -34,7 +34,7 @@ cd /usr/src/master/pagespeed/automatic
 ADIR=$(bazel info bazel-bin)
 
 # Do we need envoy or can we exclude it?
-ALIST=$(find -L $ADIR | grep \.a$ | grep -v main | grep -v copy | grep -v testdata |grep -v _race | grep -v _dbg | grep -v librewriter.a|  xargs echo)
+ALIST=$(find -L $ADIR | grep \.a$ | grep -v main | grep -v copy | grep -v testdata |grep -v _race |  xargs echo)
 
 echo "merging libs"
 ./merge_libraries.sh ~/pagespeed_automatic.a.dirty $ALIST
@@ -60,7 +60,7 @@ cd /usr/src/master/pagespeed/automatic
 DIR=$(bazel info output_base)
 cd /usr/src/master
 
-#ENVOY
+#ENVOY (do we really need this?)
 rsync -Larz "${DIR}/external/envoy" "psol/include/external" \
     --prune-empty-dirs \
     --exclude=".svn" \
@@ -71,7 +71,7 @@ rsync -Larz "${DIR}/external/envoy" "psol/include/external" \
     --exclude='*'
 
 #do we really need this?
-cp ${DIR}/external/envoy/source/common/common/standard/* psol/include/envoy/source/common/common
+cp ${DIR}/external/envoy/source/common/common/standard/* psol/include/external/envoy/source/common/common
 
 #do we really need this?
 rsync -Larz "${DIR}/external/com_github_gabime_spdlog/include/spdlog" "psol/include/external" \
@@ -86,6 +86,78 @@ rsync -Larz "${DIR}/external/com_github_gabime_spdlog/include/spdlog" "psol/incl
 #do we really need this?
 rsync -Larz "${DIR}/external/com_github_fmtlib_fmt/include/fmt" "psol/include/external" \
     --prune-empty-dirs \
+    --exclude=".svn" \
+    --exclude=".git" \
+    --include='*.h' \
+    --include='*.inc' \
+    --include='*/' \
+    --exclude='*'
+
+rsync -Larz "${DIR}/external/com_google_protobuf/src/google" "psol/include/external" --prune-empty-dirs \
+    --exclude=".svn" \
+    --exclude=".git" \
+    --include='*.h' \
+    --include='*.inc' \
+    --include='*/' \
+    --exclude='*'
+
+rsync -Larz "${DIR}/external/com_google_googletest" "psol/include/external" --prune-empty-dirs \
+    --exclude=".svn" \
+    --exclude=".git" \
+    --include='*.h' \
+    --include='*.inc' \
+    --include='*/' \
+    --exclude='*'
+
+rsync -Larz "${DIR}/external/re2/re2" "psol/include/external" --prune-empty-dirs \
+    --exclude=".svn" \
+    --exclude=".git" \
+    --include='*.h' \
+    --include='*.inc' \
+    --include='*/' \
+    --exclude='*'
+
+rsync -Larz "${DIR}/external/hiredis" "psol/include/external" --prune-empty-dirs \
+    --exclude=".svn" \
+    --exclude=".git" \
+    --include='*.h' \
+    --include='*.inc' \
+    --include='*/' \
+    --exclude='*'
+
+rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/net" "psol/include/external" --prune-empty-dirs \
+    --exclude=".svn" \
+    --exclude=".git" \
+    --include='*.h' \
+    --include='*.inc' \
+    --include='*/' \
+    --exclude='*'
+
+rsync -Larz "${DIR}/execroot/mod_pagespeed/bazel-out/k8-fastbuild/bin/pagespeed" "psol/include/external" --prune-empty-dirs \
+    --exclude=".svn" \
+    --exclude=".git" \
+    --include='*.h' \
+    --include='*.inc' \
+    --include='*/' \
+    --exclude='*'
+
+rsync -Larz "${DIR}/external/com_github_grpc_grpc/include/grpc" "psol/include/external" --prune-empty-dirs \
+    --exclude=".svn" \
+    --exclude=".git" \
+    --include='*.h' \
+    --include='*.inc' \
+    --include='*/' \
+    --exclude='*'
+
+rsync -Larz "${DIR}/external/com_github_grpc_grpc/include/grpcpp" "psol/include/external" --prune-empty-dirs \
+    --exclude=".svn" \
+    --exclude=".git" \
+    --include='*.h' \
+    --include='*.inc' \
+    --include='*/' \
+    --exclude='*'
+
+rsync -Larz "${DIR}/external/com_github_grpc_grpc/include/grpc++" "psol/include/external" --prune-empty-dirs \
     --exclude=".svn" \
     --exclude=".git" \
     --include='*.h' \
@@ -179,6 +251,7 @@ rsync -arz "third_party" "psol/include/" --prune-empty-dirs \
     --include='*/' \
     --exclude='*'
 
+sleep 3;
 cd /usr/src/master
 tar czf /usr/src/psol-bazel-${DIST}.tar.gz psol
 
