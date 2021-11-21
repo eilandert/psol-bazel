@@ -52,6 +52,7 @@ cd /usr/src
 if [ ! -d "master" ]; then
     echo "cloning.."
     git clone --depth=10 -c advice.detachedHead=false --recursive https://github.com/apache/incubator-pagespeed-mod.git master
+    cd master
     sed -i s/"#include <string>"/"#include <string>\n#include <cstdarg>"/ pagespeed/kernel/base/string.h
 else
     echo "pulling.."
